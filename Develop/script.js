@@ -14,20 +14,19 @@ var day = date.getDay()
 var month = date.getMonth()
 var year=date.getFullYear()
 var toDoArr;
-console.log(date);
-console.log(hour);
-// dateArr = today.split(" ")
-// console.log(dateArr)
 $("#currentDay").append(month + "/" + day + "/" + year)
+// Next if statement sets up the local Storage array for the toDo's
 if (JSON.parse(localStorage.getItem("toDo")) == null) {
   toDoArr = Array(9);
   localStorage.setItem("toDo", JSON.stringify(toDoArr));
 } else {
   toDoArr = JSON.parse(localStorage.getItem("toDo"));
 }
-console.log(toDoArr);
+// Function populates the rows.
 function popRows() {
+    // clear out existing html
     $("#timeBlockContainer").html("")
+    // 9 rows for 9-5 work day
   for (i = 0; i < 9; i++) {
     var newRow = $("<div>").attr("class", "row").attr("data-timeInd", (i+9));
     var timeCol = $("<div>")
@@ -36,6 +35,7 @@ function popRows() {
     var mainCol = $("<input>")
       .attr("class", "col-sm-8")
       .attr("id", "mainColumn" + i);
+    //   checks the time, sets coloring accordingly
     if (newRow.attr("data-timeInd") < hour) {
       mainCol.attr("class", "past col-sm-8");
     } else if (newRow.attr("data-timeInd") == hour) {
@@ -43,9 +43,11 @@ function popRows() {
     } else {
       mainCol.attr("class", "future col-sm-8");
     }
+    // Retrieves the text that corresponds with that item from local storage
     var textFill = JSON.parse(localStorage.getItem("toDo"));
     mainCol.val(textFill[i]);
     var lastCol = $("<div>").attr("class", "saveBtn col-sm-2");
+    // bootstrap glyphicons weren't showing up so I used an image of a save button.
     var saveBtn = $("<button>")
       .attr("class", "btn btn-default")
       .attr("id", "save")
@@ -58,17 +60,16 @@ function popRows() {
     $("#timeBlockContainer").append(newRow);
   }
 }
-
+// on click for each save button
 $(document).on("click", "#save", function () {
+    // gets data index from button clicked
   var index = $(this).attr("data-index");
-  console.log(index)
+//   gets appropriate ID for input column and the value from that
   var text = $("#mainColumn"+index).val();
-  console.log($("#mainColumn"+index).val())
+//   changes to do array at correct index to the text in the input
   toDoArr[index] = text;
-  console.log(toDoArr[index])
-
+// sets local storage
   localStorage.setItem("toDo", JSON.stringify(toDoArr));
-//   popRows()
 });
 
 popRows();

@@ -70,7 +70,8 @@ textarea{
   transition: all .3s ease-in-out;
 }
 
-.btn.btn-default{
-  width:100%;
-  height: 100%;
+.btn{
+  position: relative;
+  left: 30%;
+  top:20%;
 }

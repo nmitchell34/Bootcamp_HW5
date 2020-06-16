@@ -10,11 +10,15 @@ $("<document>");
 hoursArr = ["9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM"];
 var date = new Date($.now());
 var hour = date.getHours();
+var day = date.getDay()
+var month = date.getMonth()
+var year=date.getFullYear()
 var toDoArr;
 console.log(date);
 console.log(hour);
 // dateArr = today.split(" ")
 // console.log(dateArr)
+$("#currentDay").append(month + "/" + day + "/" + year)
 if (JSON.parse(localStorage.getItem("toDo")) == null) {
   toDoArr = Array(9);
   localStorage.setItem("toDo", JSON.stringify(toDoArr));
@@ -23,12 +27,15 @@ if (JSON.parse(localStorage.getItem("toDo")) == null) {
 }
 console.log(toDoArr);
 function popRows() {
-  for (i = 9; i < 18; i++) {
-    var newRow = $("<div>").attr("class", "row").attr("data-timeInd", i);
+    $("#timeBlockContainer").html("")
+  for (i = 0; i < 9; i++) {
+    var newRow = $("<div>").attr("class", "row").attr("data-timeInd", (i+9));
     var timeCol = $("<div>")
       .attr("class", "hour col-sm-2")
-      .text(hoursArr[i - 9]);
-    var mainCol = $("<input>").attr("class", "col-sm-8").attr("data-index", i-9).attr("id", "mainColumn");
+      .text(hoursArr[i]);
+    var mainCol = $("<input>")
+      .attr("class", "col-sm-8")
+      .attr("id", "mainColumn" + i);
     if (newRow.attr("data-timeInd") < hour) {
       mainCol.attr("class", "past col-sm-8");
     } else if (newRow.attr("data-timeInd") == hour) {
@@ -36,13 +43,13 @@ function popRows() {
     } else {
       mainCol.attr("class", "future col-sm-8");
     }
-    var textFill = JSON.parse(localStorage.getItem("toDo"))
-    mainCol.text(textFill[i])
+    var textFill = JSON.parse(localStorage.getItem("toDo"));
+    mainCol.val(textFill[i]);
     var lastCol = $("<div>").attr("class", "saveBtn col-sm-2");
     var saveBtn = $("<button>")
       .attr("class", "btn btn-default")
       .attr("id", "save")
-      .attr("data-index", i - 9)
+      .attr("data-index", i)
       .append(
         "<img src = 'http://icons.iconarchive.com/icons/icons8/windows-8/24/Programming-Save-icon.png'>"
       );
@@ -52,13 +59,16 @@ function popRows() {
   }
 }
 
-$(document).on("click", "#save", function() {
-    var index = ($(this).attr("data-index"))
-    var textAdd = $("#mainColumn").filter(function(ind){})
-    console.log(textAdd)
-    toDoArr[index]=textAdd
-    console.log(toDoArr)
+$(document).on("click", "#save", function () {
+  var index = $(this).attr("data-index");
+  console.log(index)
+  var text = $("#mainColumn"+index).val();
+  console.log($("#mainColumn"+index).val())
+  toDoArr[index] = text;
+  console.log(toDoArr[index])
 
+  localStorage.setItem("toDo", JSON.stringify(toDoArr));
+//   popRows()
 });
 
 popRows();
